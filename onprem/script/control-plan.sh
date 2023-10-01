@@ -1,5 +1,5 @@
 #!/bin/bash
-
+# https://computingforgeeks.com/deploy-kubernetes-cluster-on-ubuntu-with-kubeadm/
 sudo apt-get update
 
 
