@@ -1,9 +1,9 @@
 
-# Vagrantfile and Scripts to Automate Kubernetes Setup using Kubeadm [Practice Environment for CKA/CKAD and CKS Exams]
+# Vagrantfile and Scripts to Automate Kubernetes Setup using Kubeadm
 
 ## Documentation
 
-Current k8s version for CKA, CKAD, and CKS exam: 1.27
+Current k8s version: 1.27
 
 ## Prerequisites
 
@@ -32,14 +32,14 @@ https://discuss.hashicorp.com/t/vagrant-2-2-18-osx-11-6-cannot-create-private-ne
 To provision the cluster, execute the following commands.
 
 ```shell
-git clone https://github.com/scriptcamp/vagrant-kubeadm-kubernetes.git
-cd vagrant-kubeadm-kubernetes
+git clone https://github.com/ngocHung2000/k8s-configure.git
+cd on-prem
 vagrant up
 ```
 ## Set Kubeconfig file variable
 
 ```shell
-cd vagrant-kubeadm-kubernetes
+cd on-prem
 cd configs
 export KUBECONFIG=$(pwd)/config
 ```
