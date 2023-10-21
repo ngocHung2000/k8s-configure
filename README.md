@@ -4,3 +4,4 @@
 Below is my library installation k8s cluster. This repo includes:
 
 1. **onprem**: This folder will include some script and instruction for working with on premise projects
+1. **aws**: This folder will include some script and instruction for working with aws cloud projects
