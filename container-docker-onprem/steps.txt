@@ -1,0 +1,4 @@
+Require: VMWARE | VIRTUALBOX, Vagrant
+Container Runtime: Docker | CRI-O
+Install: kubectl, kubeadm (setup in worker -> control plane)
+Network: CALICO NETWORK
