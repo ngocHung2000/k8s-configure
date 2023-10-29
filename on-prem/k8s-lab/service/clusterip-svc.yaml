@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-svc
+spec:
+  selector:
+    app: nginx-app
+  ports:
+  - name: nginx-svc-app
+    port: 80
+    targetPort: 80
+  type: ClusterIP
+
+# service discovery (name service)
+# KUBERNETES DNS
+# cat /etc/resolv.conf (show DNS)

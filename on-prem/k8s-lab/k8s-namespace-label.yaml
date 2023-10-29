@@ -1,0 +1,9 @@
+# Chia tài nguyên trong k8s giúp có thể phân quyền ví dụ 1 nguời có thể truy cập vào các namespace là prod hay dev
+# Namespace nằm không giới hạn và nó tự detach đc tài nguyên
+# Search theo namespace
+apiVersion: v1
+kind: Namespace
+metadata:
+  name:  prod
+
+# kubectl create namespace prod

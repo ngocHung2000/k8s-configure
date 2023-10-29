@@ -1,0 +1,70 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: myapp
+spec:
+  # Default thì nó sẽ là ClusterIP nên nếu muốn dùng Headless thì ta cần set clusterIP: None là đc 
+  # và khi show thì cái nào None tại ClusterIP thì nó là Headless
+  # Nó sẽ không chứa IP của service và hay gọi là không có đầu (None IP)
+
+  # Để kiểm tra trong Container ta có thể dùng TOOL nslookup để check xem nó có list ra địa chỉ IP của Pod có thể call tới hay không
+  # Đối với các loại service khác thì nó sẽ list ra địa chỉ IP của service còn Headless thì show ra IP của các Pod luôn nhé
+  # nslookup headless-service.ns-my-namespace.svc.cluster.local
+  # Như vậy cách để call tới 1 Pod khác khi biết IP của chúng như sau
+  # ip-add-pod.service-name.name-space.svc.cluster.local (trong này các thành phần phân nhau bởi dấu chấm nên khi call với IP thì thay dấu ().) thành dấu (-))
+  # VD: 172-12-12-1.headless-service.prod.svc.cluster.local
+  clusterIP: None
+  # Đối với Headless Service ta có thể define được hostname và subdomain (Chỉ Headless Service mới có)
+  # https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/
+  selector:
+    app: myapp
+  ports:
+  - port: 80
+    targetPort: 80
+
+---
+# Headless Demo
+# Chú ý name của Headless Service phải match với subdomain thì mới được
+apiVersion: v1
+kind: Service
+metadata:
+  name: busybox-subdomain
+spec:
+  selector:
+    name: busybox
+  clusterIP: None
+  ports:
+  - name: foo # name is not required for single-port Services
+    port: 1234
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox1
+  labels:
+    name: busybox
+spec:
+  hostname: busybox-1
+  subdomain: busybox-subdomain
+  containers:
+  - image: busybox:1.28
+    command:
+      - sleep
+      - "3600"
+    name: busybox
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox2
+  labels:
+    name: busybox
+spec:
+  hostname: busybox-2
+  subdomain: busybox-subdomain
+  containers:
+  - image: busybox:1.28
+    command:
+      - sleep
+      - "3600"
+    name: busybox

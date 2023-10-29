@@ -1,0 +1,56 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-app-pod
+  namespace: ns-staging
+  labels:
+    app: nginx-app
+    environment: staging
+spec:
+  containers:
+  - name: demo-nginx
+    image: nginx
+    resources:
+      limits:
+        memory: "128Mi"
+        cpu: "500m"
+      requests:
+        memory: "50%"
+        cpu: "50%"
+    ports:
+      - containerPort: 80
+  affinity:
+    # Tạo pod trên nodeSelector với điều kiện khi pod trong node có env là staging hoặc dev
+    podAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchExpressions:
+              - key: environment
+                operator: In # In, NotIn, Exists, DoesNotExist
+                values:
+                  - staging
+                  - dev
+          topologyKey: kubernetes.io/hostname
+    # Không tạo pod với điều kiện là trong node có env là staging hoặc dev
+    # podAntiAffinity:
+    #   requiredDuringSchedulingIgnoredDuringExecution:
+    #     - labelSelector:
+    #         matchExpressions:
+    #           - key: environment
+    #             operator: In
+    #             values:
+    #               - staging
+    #               - dev
+    #       topologyKey: kubernetes.io/hostname
+
+    # kubectl get node --show-labels
+
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchExpressions:
+              - key: kubernetes.io/hostname
+                operator: In # In, NotIn, Exists, DoesNotExist
+                values:
+                  - worker-node01
+

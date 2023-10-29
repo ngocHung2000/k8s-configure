@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: external-app
+spec:
+  ports:
+  - name:  http 
+    port:  80
+    targetPort: 80
+    protocol: TCP 
+  type: ExternalName
+  externalName: www.google.com
+
+# kubectl get pod -n kube-system
+# Trong đây có coredns-... là thành phần pod phân giải tên miền trong các Pod hiểu đc (trc đây là kubedns)
+# Trong container ta không thể ping ra ngoài google.com được do nó cần trỏ tới địa chỉ của Service
+# Để trong container có thể ping ra ngoài phân giải tên miền của google ta có thể đổi nameserver thành 8.8.8.8 thay vì nameserver của Service
+# Tại nano /etc/resolv.conf
+# Trong thực tế thì ta sẽ không làm vậy mà sẽ thông qua service DNS của k8s
+
+# Để trong container có thể ping đc ra ngoài ta cần chỉnh cả configmap của coredns trong kube-system
+
+# Cần lab nhiều để hiểu sâu hơn về phần coredns này
+# Hiểu được nó thì khi setup mới tìm đc solution phù hợp

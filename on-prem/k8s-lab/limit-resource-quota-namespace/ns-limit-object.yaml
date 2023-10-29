@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: mem-cpu
+  namespace: dev
+spec:
+  hard:
+    pods: "10"
+    services: "5"
+    configmaps: "10"
+# Giới hạn tài nguyên được khởi tạo limit là 10 pod, 5 service, 10 configmap 

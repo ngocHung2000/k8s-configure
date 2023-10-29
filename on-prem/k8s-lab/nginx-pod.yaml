@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  nodeName: worker01
+  namespace: ns-test
+  # nodeSelector:
+  #   disk: ssd  # match with label node
+  containers:
+    - name: nginx
+      image: nginx:latest
+      containerPort: 80
+      imagePullPolicy: Always # IfNotPresent
+      # Healthcheck
+      livenessProbe:
+        exec:
+          command:
+            - /bin/my-script.sh
+        initialDelaySeconds: 60
+        timeoutSeconds: 10
+      readinessProbe:
+        exec:
+          command:
+            - /bin/my-script.sh
+        initialDelaySeconds: 60
+        timeoutSeconds: 10
+      
