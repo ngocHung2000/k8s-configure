@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: replica-set-app
+spec:
+  replicas: 2
+  selector:
+    app: replica-set-app
+  template:
+    metadata:
+      name: replica-set-app
+      labels:
+        app: replica-set-app
+    spec:
+      containers:
+        - name: replica-set-app
+          image: nginx
+          ports:
+            - containerPort: 80

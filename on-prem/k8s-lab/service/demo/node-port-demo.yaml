@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-app
+  labels:
+    name: nginx-app
+    app: my-app
+spec:
+  containers:
+  - name: nginx-app
+    image: nginx
+    ports:
+      - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: node-port-svc
+  labels:
+    app: demo-svc
+  namespace: default
+spec:
+  type: NodePort
+  selector:
+    app: my-app
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
+      nodePort: 30000
+      protocol: TCP 
+    - name: http
+      port: 81
+      targetPort: 80
+      nodePort: 31000
+      protocol: TCP

@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: fluentd-elasticsearch
+spec:
+  selector:
+    matchLabels:
+      app: fluentd-elasticsearch
+  template:
+    metadata:
+      labels:
+        app: fluentd-elasticsearch
+    spec:
+      containers:
+      - name: fluentd-elasticsearch
+        image: quay.io/fluentd_elasticsearch/fluentd:v2.5.2
+        resources:
+          limits:
+            memory: "200Mi"
+          requests:
+            cpu: 100m
+            memory: "200Mi"
+        volumeMounts:
+          - name:  varlog
+            mountPath:  /var/log
+    volumes:
+      - name:  varlog
+        hostPath: 
+          path: /var/log
+# Cách gom logs với fluentd để gom Logs
+# Và rất hay gặp DaemonSet trong các dự án
+        

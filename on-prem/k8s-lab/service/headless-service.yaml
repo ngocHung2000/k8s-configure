@@ -23,8 +23,8 @@ spec:
     targetPort: 80
 
 ---
-# Headless Demo
-# Chú ý name của Headless Service phải match với subdomain thì mới được
+# ExternalName Demo
+# Chú ý name của ExternalName Service phải match với subdomain thì mới được
 apiVersion: v1
 kind: Service
 metadata:

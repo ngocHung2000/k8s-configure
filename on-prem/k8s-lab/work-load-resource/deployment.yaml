@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deploy-app
+spec:
+  selector:
+    matchLabels:
+      app: deploy-app
+  template:
+    metadata:
+      labels:
+        app: deploy-app
+    spec:
+      containers:
+      - name: deploy-app
+        image: nginx
+        ports:
+        - containerPort: 80
+
+# Câu lệnh cơ bản khi scale replicas
+# kubectl scale deployment deploy-app  --replicas=3
+# kubectl scale replicaset replicaset-app  --replicas=3
