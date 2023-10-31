@@ -1,0 +1,39 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: mycronjob
+spec:
+  # Thời gian chạy lại
+  # Test Crontab tại đây https://crontab.guru/
+  # Phút, Giờ, Ngày, Tháng, Ngày trong Tuần
+  # 0-59, 0-23, 1-31,1-12, 0-6
+  schedule: "*/1 * * * *"
+  successfulJobsHistoryLimit: 5 # Lưu lại lịch sử của 5 Job mới nhất
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          completions: 5 # Tạo ra 5 Job cần phải completions
+          backoffLimit: 2 # Khi có 2 Job bị lỗi thì sẽ xác định là lỗi luôn và không chạy nữa
+          parallelism: 3 # Tại 1 thời điểm có 3 Pod chạy cùng lúc
+          activeDeadlineSeconds: 40
+          containers:
+          - name: busybox
+            image: busybox:1.28
+            command:
+            - /bin/sh
+            - -c
+            - date; echo 'CronJob is running'
+          restartPolicy: Never
+# Triển khai để backup data tránh mất mát dữ liệu
+# *	any value -> Mọi giá trị
+# ,	value list separator VD: 9,12 ->> Khớp với 9 hoặc 12
+# -	range of values VD: 3-17 ->> Mọi giá trị trong khoảng 3 đến 17
+# /	chia hết. VD: */2 ->> Mọi giá trị chia hết cho 2
+# @yearly	(non-standard)
+# @annually	(non-standard)
+# @monthly	(non-standard)
+# @weekly	(non-standard)
+# @daily	(non-standard)
+# @hourly	(non-standard)
+# @reboot	(non-standard)

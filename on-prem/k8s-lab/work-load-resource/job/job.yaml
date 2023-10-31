@@ -1,0 +1,22 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: myjob
+spec:
+  completions: 5 # Tạo ra 5 Job cần phải completions
+  backoffLimit: 2 # Khi có 2 Job bị lỗi thì sẽ xác định là lỗi luôn và không chạy nữa
+  parallelism: 3 # Tại 1 thời điểm có 3 Pod chạy cùng lúc
+  activeDeadlineSeconds: 40 # Job này chạy trong khoảng 40s nếu chưa hoàn thành thì sẽ tính là lỗi và kết thúc
+
+  template:
+    spec:
+      containers:
+        - name: busybox
+          image: busybox
+          command:
+            - /bin/sh
+            - -c
+            - date; echo "Job is running"
+      restartPolicy: Never
+# Chỉ chạy 1 lần duy nhất, nếu muốn chạy lại cần có 1 action gì đó thì nó mới chạy lại
+# Việc triển khai Job nên sử dụng trong các trường hợp ví dụ như xóa cache hay xóa logs khi không sử dụng,..

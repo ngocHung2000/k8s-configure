@@ -1,0 +1,68 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv
+  labels:
+    name: pv
+spec:
+  storageClassName: demo-storage-class # Phải match với PVC defined như ở dứoi
+  capacity:
+    storage: 1Gi # defined cho dung lượng của Persistent Volume này ở đây là 1Gi
+  accessModes:
+    - ReadWriteOnce # Chỉ 1 Node có thể truy cập
+    # - ReadWriteMany # Nhiều Node có thể truy cập (Đọc, Ghi)
+    # - ReadOnlyMany # Nhiều Node có thể truy cập (Chỉ đọc)
+  hostPath:
+    path: "/data"
+# Ta có thể sử dụng trên Cloud hoặc có thể tự custom với Hostpath
+# Pod sẽ không sử dụng trực tiếp thành phần này mà sẽ sử dụng thông qua Persistent Volume Claim
+# Với 1 Persistent Volume chỉ có thể kết nối tới 1 Persistent Volume Claim 
+# Nếu muốn thay đổi sử dụng 1 PVC mới ta cần edit lại chứ nếu xóa PVC đi thì nó cũng sẽ không cập nhật lại
+# TA SỬ DỤNG CMD ( kubectl edit persistentvolume pv-name )
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc
+  labels:
+    name: pvc
+spec:
+  storageClassName: demo-storage-class # Phải match với PVC defined như ở trên
+  resources:
+    requests:
+      storage: 150Mi
+  accessModes:
+    - ReadWriteOnce
+# kubectl get pvc 
+# kubectl get pv 
+--- 
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: my-busybox
+spec:
+  selector:
+    matchLabels:
+      app: my-busybox
+  template:
+    metadata:
+      labels:
+        app: my-busybox
+    spec:
+      containers:
+      - name: my-busybox
+        image: busybox
+        resources:
+          limits:
+            memory: "50Mi"
+            cpu: "500m"
+        command:
+          - sleep
+          - "600"
+        volumeMounts:
+          - name:  my-volume # Match với name volumes bên dưới
+            mountPath:  "/data"
+      volumes:
+        - name:  my-volume # Match với name volumesMounts bên trên
+          persistentVolumeClaim:
+            claimName: pvc # Truy cập tới đúng name của PVC tạo ra
