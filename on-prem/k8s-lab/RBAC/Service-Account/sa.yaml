@@ -1,0 +1,14 @@
+# Mặc định thì các thông tin về secret sẽ được nằm trong đường dẫn tại container như sau
+# cd /var/run/secret
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name:  my-account
+  namespace: my-namespace
+# TEST API SERVER
+# Trước hết ta nên export ENV chứa các cert
+# export SERVICE_ACCOUNT=/var/run/secrets/kubernetes.io/serviceaccount
+# export CA_CERT=${SERVICE_ACCOUNT}/ca.crt
+# export TOKEN=`cat ${SERVICE_ACCOUNT}/token`
+# curl --cacert ${CA_CERT} --header "Authorization: Bearer ${TOKEN}" \
+#  -X GET https://kubernetes.default.svc/api/v1/namespaces/default/pods

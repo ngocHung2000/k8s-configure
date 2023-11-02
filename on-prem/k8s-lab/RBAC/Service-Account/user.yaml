@@ -1,0 +1,44 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: dev-role-demo
+  namespace: default
+rules:
+  - apiGroups: [""] # empty string represents the core API Group
+    resources: ["pods"]
+    verbs: ["get","list","watch","apply"]
+  - apiGroups: ["apps"]
+    resources: ["deployment"]
+    verbs: ["get","list"]
+
+---
+# Khi define xong Role thì ta sẽ gán nó để có thể sử dụng với RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: dev-rolebinding
+  namespace: default
+subjects:
+  - namespace: default
+    kind: User
+    name: dev-be # tên user đã tạo
+roleRef:
+  kind: Role
+  name: default-role-demo
+  apiGroup: rbac.authorization.k8s.io
+
+# Tạo user và set user
+# kubectl config view
+
+# Về console của Node ta tạo các cert authen như sau
+# sudo su
+# openssl genrsa -out dev-be.key 2048
+# openssl req -new -key dev-be.key -out dev-be.csr -subj "/CN=dev-be/O=staging" 
+# CN ở đây là user define, O là Group define
+# openssl x509 -req -in dev-be.csr -CA /etc/kubernetes/pki/ca.crt -CAkey /etc/kubernetes/pki/ca.key -CAcreateserial -out dev-be.crt -days 365
+
+# Tạo user
+# kubectl config set-credentials dev-be --client-certificate=dev-be.crt --client-key=dev-be.key
+# kubectl config set-context dev-be-context --cluster=kubernetes --user=dev-be
+
+

@@ -23,3 +23,4 @@
 - Group: Là tập hợp các người dùng được nhóm lại với nhau để chia sẻ các quyền truy cập với Role tương tự. Các nhóm có thể được tạo ra trong hệ thống xác thực của Kubernetes hoặc từ cơ sở dữ liệu xác thực bên ngoài
 - Service Account: Là các tài khoản được tạo ra tự động và quản lý bởi Kubernetes. Chúng được sử dụng bởi các ứng dụng và các thành phần trong môi trường Kubernetes để xác thực và truy cập vào các tài nguyên
 ![sva](images/service-account.png)
+    - Nếu 1 Pod không được define Service Account thì K8s mặc định sẽ gán cho Pod đó Service Account là default
