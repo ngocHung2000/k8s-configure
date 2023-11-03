@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: external-app
+spec:
+  ports:
+  - name:  http 
+    port:  80
+    targetPort: 80
+    protocol: TCP 
+  type: ExternalName
+  externalName: www.google.com

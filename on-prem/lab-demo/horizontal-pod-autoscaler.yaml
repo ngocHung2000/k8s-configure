@@ -1,0 +1,56 @@
+# Có thể sử dụng cho cả ReplicaSet và Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deploy-app
+spec:
+  selector:
+    matchLabels:
+      app: nginx-app-v1
+  template:
+    metadata:
+      labels:
+        app: nginx-app-v1
+    spec:
+      containers:
+      - name: deploy-app
+        image: nginx
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            cpu: 100m
+
+---
+
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: nginx-app-hpa
+  labels:
+    app: hpa-app
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment # or ReplicaSet
+    name: deploy-app
+  minReplicas: 5 # Scale in 5 to 10 replica
+  maxReplicas: 10
+  # ở đây là 50% CPU đc sử dụng còn mặc định là 25% thì nó sẽ scale lên để chia tải cho các Pod khác
+  metrics:  
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 50
+  # kubectl get hpa -owide
+# kubectl get horizontalpodautoscaler -owide
+# kubectl set image deployment deploy-name container-name=new-container:next-version
+
+# sử dụng command set HPA
+# kubectl autoscale deployment deployment-name --min=3 --max=10 --cpu-percent=50
+
+# Chú ý nếu ta update lại min hay max replicas thì nó sẽ không scale down nếu như max > số lượng update
+# Trừ khi trong trường hợp có sự kiện xảy ra thì nó mới thay đổi theo đúng HPA đã defined
+

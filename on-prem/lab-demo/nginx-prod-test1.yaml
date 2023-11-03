@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: nginx-app12
+  name: nginx-app12
+  namespace: staging
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx-app12
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: nginx-app12
+    spec:
+      containers:
+        - image: nginx
+          name: nginx1
+          resources: {}
+          ports:
+            - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-app-svc12
+  namespace: staging
+  labels:
+    app: nginx-svc1
+spec:
+  type: ClusterIP
+  selector:
+    app: nginx-app12
+  ports:
+    - name: http
+      targetPort: 80
+      port: 80
+      protocol: TCP
+

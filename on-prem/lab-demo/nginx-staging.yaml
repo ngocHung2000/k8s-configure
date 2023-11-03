@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    env: staging
+  name: nginx-app-staging
+spec:
+  containers:
+  - image: nginx
+    name: nginx-app-staging
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}

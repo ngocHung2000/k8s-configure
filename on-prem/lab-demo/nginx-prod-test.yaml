@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: nginx-app
+  name: nginx-app
+  namespace: prod
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx-app
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: nginx-app
+    spec:
+      containers:
+        - image: nginx
+          name: nginx
+          resources: {}
+          ports:
+            - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-app-svc
+  namespace: prod
+  labels:
+    app: nginx-svc
+spec:
+  type: ClusterIP
+  selector:
+    app: nginx-app
+  ports:
+    - name: http
+      targetPort: 80
+      port: 80
+      protocol: TCP
+

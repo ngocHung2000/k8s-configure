@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: front-end
+  name: nginx-app
+  labels:
+    app: nginx-app-ui
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nginx-ui
+  template:
+    metadata:
+      name: nginx-app
+      labels:
+        app: nginx-ui
+    spec:
+      containers:
+        - name: nginx-ui
+          image: nginx:1.18
+          ports:
+            - containerPort: 80
+          imagePullPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-app-svc
+  namespace: front-end
+  labels:
+    app: nginx-ui-svc
+spec:
+  type: LoadBalancer
+  selector:
+    app: nginx-ui
+  ports:
+    - name: nginx-ui-svc
+      port: 80
+      nodePort: 30000
+      targetPort: 80
+
+

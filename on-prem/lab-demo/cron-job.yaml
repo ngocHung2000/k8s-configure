@@ -1,0 +1,23 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: mycronjob
+spec:
+  # Thời gian chạy lại
+  # https://crontab.guru/
+  # Phút, Giờ, Ngày, Tháng, Ngày trong Tuần
+  schedule: "48 10 * * *"
+  successfulJobsHistoryLimit: 5 # Lưu lại lịch sử của 5 Job mới nhất
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: busybox
+            image: busybox:1.28
+            command:
+            - /bin/sh
+            - -c
+            - date; echo 'CronJob is running'
+          restartPolicy: Never
+
